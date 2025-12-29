@@ -5,91 +5,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exira</title>
-  <meta name="description" content="Exira è un progetto indipendente in fase di sviluppo, focalizzato su sistemi intelligenti e soluzioni tecnologiche avanzate per contesti professionali e organizzativi complessi." />
+  <meta name="description" content="Exira è un progetto indipendente in fase di sviluppo: sistemi intelligenti, strumenti decisionali e integrazione tra software, dati e flussi operativi. Minimal. Controllabile. In evoluzione." />
 
   <style>
     :root{
-      --bg: #0b0f17;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.08);
+      --bg: #070A10;
       --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.70);
+      --muted: rgba(255,255,255,0.68);
       --line: rgba(255,255,255,0.14);
-      --accent: rgba(255,255,255,0.92);
-      --shadow: 0 14px 50px rgba(0,0,0,0.45);
-      --radius: 16px;
+      --glass: rgba(255,255,255,0.06);
+      --glass2: rgba(255,255,255,0.08);
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
     *{ box-sizing: border-box; }
+    html, body { height: 100%; }
     body{
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: var(--sans);
       color: var(--text);
-      background: radial-gradient(1200px 600px at 20% -10%, rgba(255,255,255,0.10), transparent 60%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(255,255,255,0.08), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(900px 500px at 12% -10%, rgba(255,255,255,0.10), transparent 60%),
+        radial-gradient(700px 420px at 92% 8%, rgba(255,255,255,0.08), transparent 60%),
+        radial-gradient(800px 520px at 40% 110%, rgba(255,255,255,0.06), transparent 60%),
+        var(--bg);
       line-height: 1.65;
+      overflow-x: hidden;
     }
 
+    /* Subtle "field" texture */
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.07;
+      mix-blend-mode: overlay;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+    }
+
+    /* Layout */
     .wrap{
-      max-width: 980px;
+      max-width: 1020px;
       margin: 0 auto;
-      padding: 28px 18px 60px;
+      padding: 26px 18px 70px;
+      position: relative;
     }
 
-    /* Top bar */
+    /* Top */
     header{
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 10;
       backdrop-filter: blur(10px);
-      background: rgba(11,15,23,0.65);
+      background: rgba(7,10,16,0.62);
       border-bottom: 1px solid var(--line);
     }
     .topbar{
-      max-width: 980px;
+      max-width: 1020px;
       margin: 0 auto;
       padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
     }
     .brand{
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      text-decoration: none;
+      gap: 12px;
       color: var(--text);
+      text-decoration: none;
     }
-    .logo{
+    .sigil{
       width: 34px;
       height: 34px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.26), rgba(255,255,255,0.06));
+      border-radius: 12px;
       border: 1px solid var(--line);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04)),
+        radial-gradient(18px 18px at 20% 30%, rgba(255,255,255,0.24), transparent 60%),
+        radial-gradient(18px 18px at 75% 70%, rgba(255,255,255,0.18), transparent 60%);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.55);
+      position: relative;
+      overflow: hidden;
     }
-    .brand span{
-      font-size: 15px;
-      letter-spacing: 0.08em;
+    .sigil:after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: conic-gradient(from 180deg, transparent, rgba(255,255,255,0.18), transparent);
+      animation: spin 10s linear infinite;
+      opacity: 0.8;
+    }
+    @keyframes spin{
+      to { transform: rotate(360deg); }
+    }
+
+    .brand .name{
+      font-family: var(--mono);
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      opacity: 0.9;
+      font-size: 13px;
+      opacity: 0.92;
     }
 
     nav{
       display: flex;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
     nav a{
       color: var(--muted);
       text-decoration: none;
-      font-size: 14px;
-      padding: 6px 10px;
-      border-radius: 10px;
+      font-size: 13px;
+      padding: 7px 10px;
+      border-radius: 999px;
       border: 1px solid transparent;
+      background: transparent;
+      transition: 160ms ease;
     }
     nav a:hover{
       color: var(--text);
@@ -99,31 +138,59 @@
 
     /* Hero */
     .hero{
-      margin-top: 24px;
-      padding: 28px 22px;
+      margin-top: 22px;
       border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
       border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
       box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
     }
-    .hero h1{
+
+    /* Unique, minimal "diagram" stripe */
+    .hero .stripe{
+      position:absolute;
+      inset: 0;
+      opacity: 0.75;
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 30%, transparent 60%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.00) 0 18px, rgba(255,255,255,0.06) 18px 19px);
+      mask-image: radial-gradient(500px 220px at 50% 0%, black 30%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner{
+      padding: 28px 22px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1{
       margin: 0 0 10px;
-      font-size: clamp(32px, 5vw, 44px);
-      font-weight: 600;
+      font-size: clamp(34px, 5.2vw, 48px);
+      font-weight: 650;
       letter-spacing: -0.02em;
     }
-    .hero p{
+
+    .lede{
       margin: 0;
       color: var(--muted);
+      max-width: 75ch;
       font-size: 16px;
-      max-width: 70ch;
     }
-    .badge{
+
+    .meta{
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .pill{
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 16px;
-      padding: 8px 12px;
+      gap: 9px;
+      padding: 9px 12px;
       border-radius: 999px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.04);
@@ -134,54 +201,87 @@
     .dot{
       width: 8px;
       height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.65);
-      box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
+      border-radius: 99px;
+      background: rgba(255,255,255,0.70);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.10);
+    }
+    .glyph{
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      opacity: 0.9;
     }
 
-    /* Sections */
+    /* Content grid */
     .grid{
-      margin-top: 22px;
+      margin-top: 18px;
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 14px;
     }
+
     .card{
       grid-column: span 6;
       padding: 18px 18px;
       border-radius: var(--radius);
-      background: var(--panel);
       border: 1px solid var(--line);
+      background: var(--glass);
+      position: relative;
+      overflow: hidden;
     }
+
+    /* Minimal "margin note" aesthetic */
+    .card:before{
+      content:"";
+      position:absolute;
+      left: 14px;
+      top: 16px;
+      bottom: 16px;
+      width: 1px;
+      background: rgba(255,255,255,0.10);
+    }
+    .card > * { position: relative; z-index: 1; padding-left: 10px; }
+
     .card h2{
       margin: 0 0 10px;
-      font-size: 16px;
-      letter-spacing: 0.08em;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
+      color: rgba(255,255,255,0.88);
+      font-weight: 650;
     }
-    .card p{
-      margin: 0;
-      color: var(--muted);
-    }
+    .card p{ margin: 0; color: var(--muted); }
+
     .card ul{
       margin: 10px 0 0;
-      padding-left: 18px;
+      padding-left: 28px;
       color: var(--muted);
     }
-    .card li{ margin: 6px 0; }
+    .card li{ margin: 7px 0; }
 
-    /* Full width card */
-    .wide{
-      grid-column: span 12;
-      background: var(--panel2);
+    .wide{ grid-column: span 12; background: var(--glass2); }
+
+    /* "Thought fragment" block */
+    .fragment{
+      margin-top: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      font-family: var(--mono);
+      color: rgba(255,255,255,0.74);
+      letter-spacing: 0.02em;
+    }
+    .fragment .k{
+      opacity: 0.85;
+    }
+    .fragment .v{
+      color: rgba(255,255,255,0.86);
     }
 
-    /* Footer */
     footer{
-      margin-top: 26px;
-      padding-top: 18px;
+      margin-top: 24px;
+      padding-top: 16px;
       border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 13px;
@@ -191,115 +291,135 @@
       align-items: center;
       justify-content: space-between;
     }
+    footer a{
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+    footer a:hover{ color: var(--text); }
 
     /* Mobile */
     @media (max-width: 760px){
+      nav{ display:none; }
       .card{ grid-column: span 12; }
-      nav{ display:none; } /* basic: menu sparisce su mobile */
-      .hero{ padding: 22px 16px; }
+      .hero-inner{ padding: 22px 16px; }
+      .card > * { padding-left: 8px; }
+      .card:before{ left: 12px; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .sigil:after{ animation: none; }
     }
   </style>
 </head>
 
 <body>
+  <div class="noise" aria-hidden="true"></div>
 
-<header>
-  <div class="topbar">
-    <a class="brand" href="#top" aria-label="Exira home">
-      <div class="logo" aria-hidden="true"></div>
-      <span>Exira</span>
-    </a>
+  <header>
+    <div class="topbar">
+      <a class="brand" href="#top" aria-label="Exira home">
+        <div class="sigil" aria-hidden="true"></div>
+        <div class="name">EXIRA</div>
+      </a>
 
-    <nav aria-label="Navigazione">
-      <a href="#visione">Visione</a>
-      <a href="#ambito">Ambito</a>
-      <a href="#approccio">Approccio</a>
-      <a href="#stato">Stato</a>
-    </nav>
-  </div>
-</header>
+      <nav aria-label="Navigazione">
+        <a href="#visione">Visione</a>
+        <a href="#ambito">Ambito</a>
+        <a href="#approccio">Approccio</a>
+        <a href="#stato">Stato</a>
+      </nav>
+    </div>
+  </header>
 
-<main class="wrap" id="top">
+  <main class="wrap" id="top">
 
-  <section class="hero">
-    <h1>Exira</h1>
-    <p>
-      Un progetto indipendente in fase di sviluppo orientato alla progettazione di sistemi intelligenti
-      e soluzioni tecnologiche avanzate per contesti professionali e organizzativi complessi.
-    </p>
-    <div class="badge"><span class="dot"></span> Progetto in evoluzione</div>
-  </section>
+    <section class="hero">
+      <div class="stripe" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <h1>Exira</h1>
+        <p class="lede">
+          Exira è un progetto indipendente in fase di sviluppo orientato alla progettazione di sistemi intelligenti
+          e soluzioni tecnologiche applicate a contesti complessi. Non promette scorciatoie: costruisce strumenti
+          che rendono la complessità governabile.
+        </p>
 
-  <section class="grid" aria-label="Contenuti">
+        <div class="meta">
+          <div class="pill"><span class="dot"></span> Progetto in evoluzione</div>
+          <div class="pill"><span class="glyph">/</span> Minimal • Controllabile • Adattabile</div>
+          <div class="pill"><span class="glyph">∴</span> Tecnologia come mezzo</div>
+        </div>
+      </div>
+    </section>
 
-    <article class="card" id="visione">
-      <h2>Visione</h2>
-      <p>
-        Exira esplora l’intersezione tra tecnologia, intelligenza artificiale e processi decisionali complessi.
-        L’obiettivo è progettare strumenti capaci di supportare professionisti e organizzazioni in contesti ad alta
-        complessità, mantenendo controllo, autonomia e comprensione dei sistemi utilizzati.
-      </p>
-    </article>
+    <section class="grid" aria-label="Contenuti">
 
-    <article class="card" id="ambito">
-      <h2>Ambito</h2>
-      <p>
-        Il progetto si muove in ambiti legati a ricerca, progettazione e integrazione di sistemi intelligenti applicati:
-      </p>
-      <ul>
-        <li>Sistemi intelligenti applicati</li>
-        <li>Automazione dei processi cognitivi</li>
-        <li>Supporto decisionale</li>
-        <li>Integrazione tra software, dati e flussi operativi</li>
-      </ul>
-      <p style="margin-top:10px;">
-        Le applicazioni sono pensate per contesti professionali e organizzativi, senza limitarsi a un singolo settore.
-      </p>
-    </article>
+      <article class="card" id="visione">
+        <h2>Visione</h2>
+        <p>
+          Exira esplora l’intersezione tra tecnologia, intelligenza artificiale e processi decisionali complessi.
+          L’obiettivo è progettare strumenti che assistano persone e organizzazioni senza sottrarre loro autonomia:
+          sistemi che aiutano a capire, non solo a fare.
+        </p>
+      </article>
 
-    <article class="card" id="approccio">
-      <h2>Approccio</h2>
-      <p>
-        Exira adotta un approccio pragmatico e incrementale. Ogni soluzione nasce da un’analisi del contesto reale,
-        con attenzione a riservatezza dei dati, controllo dei sistemi, adattabilità nel tempo e comprensione umana
-        delle tecnologie impiegate. La complessità viene gestita, non nascosta.
-      </p>
-    </article>
+      <article class="card" id="ambito">
+        <h2>Ambito</h2>
+        <p>
+          Il progetto si muove tra ricerca, progettazione e integrazione di sistemi intelligenti applicati:
+        </p>
+        <ul>
+          <li>Sistemi intelligenti orientati a casi d’uso reali</li>
+          <li>Automazione dei processi cognitivi e operativi</li>
+          <li>Supporto decisionale e sintesi di complessità</li>
+          <li>Integrazione tra software, dati e flussi di lavoro</li>
+        </ul>
+        <p style="margin-top:10px;">
+          Le applicazioni sono pensate per contesti professionali e organizzativi, senza limitarsi a un singolo settore.
+        </p>
+      </article>
 
-    <article class="card" id="stato">
-      <h2>Stato del progetto</h2>
-      <p>
-        Exira è attualmente in fase di sviluppo. Le attività in corso riguardano la definizione dell’architettura,
-        delle metodologie e delle prime implementazioni sperimentali. Ulteriori informazioni verranno rese disponibili
-        progressivamente.
-      </p>
-    </article>
+      <article class="card" id="approccio">
+        <h2>Approccio</h2>
+        <p>
+          Exira adotta un approccio pragmatico e incrementale. Ogni soluzione nasce da un contesto reale,
+          con attenzione a riservatezza dei dati, controllo dei sistemi e adattabilità nel tempo.
+          L’obiettivo non è “magia”, ma chiarezza operativa: un’intelligenza che si lascia ispezionare.
+        </p>
+      </article>
 
-    <article class="card wide">
-      <h2>Nota</h2>
-      <p>
-        Questo sito ha lo scopo di rendere evidente l’esistenza del progetto e la sua direzione generale.
-        I dettagli operativi verranno condivisi nel tempo, in modo coerente con l’evoluzione dell’iniziativa.
-      </p>
-    </article>
+      <article class="card" id="stato">
+        <h2>Stato del progetto</h2>
+        <p>
+          Exira è in fase di sviluppo. Le attività in corso riguardano la definizione dell’architettura,
+          delle metodologie e delle prime implementazioni sperimentali. Le informazioni verranno condivise
+          progressivamente, in modo coerente con l’evoluzione dell’iniziativa.
+        </p>
+      </article>
 
-  </section>
+      <article class="card wide">
+        <h2>Impostazione</h2>
+        <p>
+          Questo sito è intenzionalmente semplice: un’indicazione di esistenza e direzione, non una vetrina.
+          Exira preferisce la precisione alla teatralità. Se un sistema è utile, deve essere comprensibile,
+          controllabile e integrabile nel mondo reale.
+        </p>
 
-  <footer>
-    <div>© Exira — progetto in sviluppo</div>
-    <div>Ultimo aggiornamento: <span id="d"></span></div>
-  </footer>
+        <div class="fragment" aria-label="Frammento concettuale">
+          <span class="k">Principio:</span> <span class="v">l’innovazione è sottrarre rumore.</span><br/>
+          <span class="k">Metodo:</span> <span class="v">fare meno, ma farlo meglio.</span><br/>
+          <span class="k">Esito:</span> <span class="v">complessità gestita, non nascosta.</span>
+        </div>
+      </article>
 
-</main>
+    </section>
 
-<script>
-  // Data automatica (facoltativa)
-  const el = document.getElementById("d");
-  if (el) {
-    const now = new Date();
-    el.textContent = now.toLocaleDateString("it-IT", { year: "numeric", month: "long", day: "numeric" });
-  }
-</script>
+    <footer>
+      <div>© Exira — progetto in sviluppo</div>
+      <div class="glyph">Presenza minima. Direzione chiara.</div>
+    </footer>
 
+  </main>
 </body>
 </html>
