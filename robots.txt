@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://exira11.github.io/exira/sitemap.xml
