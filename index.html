@@ -1,359 +1,186 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Exira</title>
-  <meta name="description" content="Exira è un progetto indipendente in fase di sviluppo: sistemi intelligenti, strumenti decisionali e integrazione tra software, dati e flussi operativi. Minimal. Controllabile. In evoluzione." />
+  <meta name="description" content="Exira è un progetto indipendente in fase di sviluppo: sistemi intelligenti, supporto decisionale e integrazione tra software, dati e flussi operativi. Presenza minima. Direzione chiara." />
+  <link rel="canonical" href="https://exira11.github.io/exira/" />
+
+  <meta property="og:title" content="Exira" />
+  <meta property="og:description" content="Presenza minima. Direzione chiara. Sistemi intelligenti per contesti complessi." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://exira11.github.io/exira/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Exira" />
+  <meta name="twitter:description" content="Presenza minima. Direzione chiara." />
+
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='26' fill='%23070A10'/%3E%3Cpath d='M26 64h68' stroke='white' stroke-width='6' opacity='.85'/%3E%3Cpath d='M42 44h36M42 84h36' stroke='white' stroke-width='6' opacity='.55'/%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#070A10" />
 
   <style>
     :root{
-      --bg: #070A10;
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.68);
-      --line: rgba(255,255,255,0.14);
-      --glass: rgba(255,255,255,0.06);
-      --glass2: rgba(255,255,255,0.08);
-      --shadow: 0 18px 60px rgba(0,0,0,0.55);
-      --radius: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --bg:#070A10; --fg:rgba(255,255,255,.92); --muted:rgba(255,255,255,.68);
+      --line:rgba(255,255,255,.14); --soft:rgba(255,255,255,.06); --soft2:rgba(255,255,255,.085);
+      --shadow:0 18px 70px rgba(0,0,0,.55); --r:18px;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     }
-
-    *{ box-sizing: border-box; }
-    html, body { height: 100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
+      margin:0;color:var(--fg);font-family:var(--sans);line-height:1.65;overflow-x:hidden;
       background:
-        radial-gradient(900px 500px at 12% -10%, rgba(255,255,255,0.10), transparent 60%),
-        radial-gradient(700px 420px at 92% 8%, rgba(255,255,255,0.08), transparent 60%),
-        radial-gradient(800px 520px at 40% 110%, rgba(255,255,255,0.06), transparent 60%),
+        radial-gradient(900px 520px at 14% -10%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(740px 460px at 92% 10%, rgba(255,255,255,.08), transparent 62%),
+        radial-gradient(820px 520px at 40% 110%, rgba(255,255,255,.06), transparent 62%),
         var(--bg);
-      line-height: 1.65;
-      overflow-x: hidden;
     }
+    .noise{pointer-events:none;position:fixed;inset:0;opacity:.07;mix-blend-mode:overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-size:220px 220px;}
+    .cursorHalo{pointer-events:none;position:fixed;inset:0;opacity:.55;transition:opacity 220ms ease;
+      background:radial-gradient(260px 260px at var(--mx,50%) var(--my,30%), rgba(255,255,255,.10), transparent 62%);}
 
-    /* Subtle "field" texture */
-    .noise {
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      opacity: 0.07;
-      mix-blend-mode: overlay;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      background-size: 220px 220px;
-    }
+    header{position:sticky;top:0;z-index:10;background:rgba(7,10,16,.65);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+    .topbar{max-width:1040px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg);user-select:none;}
+    .sigil{width:34px;height:34px;border-radius:12px;border:1px solid var(--line);
+      background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
+               radial-gradient(18px 18px at 20% 30%, rgba(255,255,255,.24), transparent 60%),
+               radial-gradient(18px 18px at 75% 70%, rgba(255,255,255,.18), transparent 60%);
+      box-shadow:0 14px 40px rgba(0,0,0,.55);position:relative;overflow:hidden;}
+    .sigil:after{content:"";position:absolute;inset:-40%;opacity:.8;
+      background:conic-gradient(from 180deg, transparent, rgba(255,255,255,.18), transparent);
+      animation:spin 10s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brandName{font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;font-size:13px;opacity:.92;}
 
-    /* Layout */
-    .wrap{
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 26px 18px 70px;
-      position: relative;
-    }
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
+    nav a,.chip{color:var(--muted);text-decoration:none;font-size:13px;padding:7px 10px;border-radius:999px;border:1px solid transparent;transition:160ms ease;white-space:nowrap;}
+    nav a:hover{color:var(--fg);border-color:var(--line);background:rgba(255,255,255,.04);}
+    .chip{border-color:var(--line);background:rgba(255,255,255,.04);cursor:pointer;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;font-size:12px;}
+    .chip:hover{color:var(--fg);background:rgba(255,255,255,.06);}
 
-    /* Top */
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-      background: rgba(7,10,16,0.62);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar{
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .sigil{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04)),
-        radial-gradient(18px 18px at 20% 30%, rgba(255,255,255,0.24), transparent 60%),
-        radial-gradient(18px 18px at 75% 70%, rgba(255,255,255,0.18), transparent 60%);
-      box-shadow: 0 14px 40px rgba(0,0,0,0.55);
-      position: relative;
-      overflow: hidden;
-    }
-    .sigil:after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: conic-gradient(from 180deg, transparent, rgba(255,255,255,0.18), transparent);
-      animation: spin 10s linear infinite;
-      opacity: 0.8;
-    }
-    @keyframes spin{
-      to { transform: rotate(360deg); }
-    }
+    .wrap{max-width:1040px;margin:0 auto;padding:24px 18px 70px;}
+    .hero{margin-top:18px;border-radius:var(--r);border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;}
+    .hero:before{content:"";position:absolute;inset:0;opacity:.75;pointer-events:none;
+      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.05) 30%, transparent 60%),
+               repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 18px, rgba(255,255,255,.06) 18px 19px);
+      mask-image:radial-gradient(520px 240px at 50% 0%, black 30%, transparent 70%);}
+    .heroInner{position:relative;padding:28px 22px 22px;}
+    h1{margin:0 0 10px;font-size:clamp(34px,5.2vw,50px);font-weight:650;letter-spacing:-.02em;}
+    .lede{margin:0;color:var(--muted);max-width:80ch;font-size:16px;}
+    .metaRow{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+    .pill{display:inline-flex;align-items:center;gap:9px;padding:9px 12px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);color:var(--muted);font-size:13px;width:fit-content;}
+    .dot{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.70);box-shadow:0 0 0 4px rgba(255,255,255,.10);}
+    .glyph{font-family:var(--mono);letter-spacing:.08em;opacity:.9;}
 
-    .brand .name{
-      font-family: var(--mono);
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-size: 13px;
-      opacity: 0.92;
-    }
+    .grid{margin-top:16px;display:grid;grid-template-columns:repeat(12,1fr);gap:14px;}
+    .card{grid-column:span 6;padding:18px;border-radius:var(--r);border:1px solid var(--line);background:var(--soft);position:relative;overflow:hidden;}
+    .card:before{content:"";position:absolute;left:14px;top:16px;bottom:16px;width:1px;background:rgba(255,255,255,.10);}
+    .card>*{position:relative;z-index:1;padding-left:10px;}
+    .card h2{margin:0 0 10px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.88);font-weight:650;}
+    .card p{margin:0;color:var(--muted);}
+    .card ul{margin:10px 0 0;padding-left:28px;color:var(--muted);}
+    .card li{margin:7px 0;}
+    .wide{grid-column:span 12;background:var(--soft2);}
+    .fragment{margin-top:14px;padding:16px 18px;border-radius:var(--r);border:1px solid var(--line);background:rgba(255,255,255,.04);
+      font-family:var(--mono);color:rgba(255,255,255,.74);letter-spacing:.02em;}
+    .fragment .k{opacity:.85;} .fragment .v{color:rgba(255,255,255,.88);}
 
-    nav{
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    nav a{
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: transparent;
-      transition: 160ms ease;
-    }
-    nav a:hover{
-      color: var(--text);
-      border-color: var(--line);
-      background: rgba(255,255,255,0.04);
-    }
+    .protocol{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;color:var(--muted);font-size:14px;}
+    .protocol .step{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:8px 10px;border-radius:12px;
+      font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;font-size:12px;}
+    .contactBox{margin-top:12px;border:1px dashed rgba(255,255,255,.22);border-radius:14px;padding:14px;background:rgba(255,255,255,.03);color:var(--muted);}
+    .pec{display:inline-flex;align-items:center;gap:10px;margin-top:8px;font-family:var(--mono);letter-spacing:.04em;
+      color:rgba(255,255,255,.86);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);}
+    .pec:hover{color:var(--fg);}
 
-    /* Hero */
-    .hero{
-      margin-top: 22px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      position: relative;
-    }
+    footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;display:grid;
+      grid-template-columns:1fr auto;gap:10px 14px;align-items:center;}
+    .footLeft{display:flex;flex-direction:column;gap:6px;}
+    .footRight{display:flex;flex-direction:column;gap:8px;align-items:flex-end;text-align:right;}
+    .badgeWrap img{display:block;max-width:100%;height:auto;border-radius:10px;opacity:.92;}
 
-    /* Unique, minimal "diagram" stripe */
-    .hero .stripe{
-      position:absolute;
-      inset: 0;
-      opacity: 0.75;
-      background:
-        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 30%, transparent 60%),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.00) 0 18px, rgba(255,255,255,0.06) 18px 19px);
-      mask-image: radial-gradient(500px 220px at 50% 0%, black 30%, transparent 70%);
-      pointer-events: none;
-    }
+    body.essential{background:var(--bg);}
+    body.essential .noise, body.essential .cursorHalo, body.essential .sigil:after, body.essential .hero:before,
+    body.essential .badgeWrap, body.essential nav{display:none !important;}
+    body.essential .hero, body.essential .card, body.essential .wide{background:transparent !important;box-shadow:none !important;}
+    body.essential .hero, body.essential .card, body.essential footer{border-color:rgba(255,255,255,.10) !important;}
+    body.essential h1{font-family:var(--mono);letter-spacing:.02em;}
+    body.essential .lede{max-width:66ch;}
+    body.essential .pill{background:transparent;}
+    body.essential .protocol .step{background:transparent;}
+    body.essential .card:before{background:rgba(255,255,255,.08);}
 
-    .hero-inner{
-      padding: 28px 22px 24px;
-      position: relative;
-      z-index: 1;
+    @media (max-width:760px){
+      nav{display:none;}
+      .card{grid-column:span 12;}
+      .heroInner{padding:22px 16px;}
+      .card>*{padding-left:8px;}
+      .card:before{left:12px;}
+      footer{grid-template-columns:1fr;}
+      .footRight{align-items:flex-start;text-align:left;}
     }
-
-    h1{
-      margin: 0 0 10px;
-      font-size: clamp(34px, 5.2vw, 48px);
-      font-weight: 650;
-      letter-spacing: -0.02em;
-    }
-
-    .lede{
-      margin: 0;
-      color: var(--muted);
-      max-width: 75ch;
-      font-size: 16px;
-    }
-
-    .meta{
-      margin-top: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      font-size: 13px;
-      width: fit-content;
-    }
-    .dot{
-      width: 8px;
-      height: 8px;
-      border-radius: 99px;
-      background: rgba(255,255,255,0.70);
-      box-shadow: 0 0 0 4px rgba(255,255,255,0.10);
-    }
-    .glyph{
-      font-family: var(--mono);
-      letter-spacing: 0.08em;
-      opacity: 0.9;
-    }
-
-    /* Content grid */
-    .grid{
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-    }
-
-    .card{
-      grid-column: span 6;
-      padding: 18px 18px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--glass);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Minimal "margin note" aesthetic */
-    .card:before{
-      content:"";
-      position:absolute;
-      left: 14px;
-      top: 16px;
-      bottom: 16px;
-      width: 1px;
-      background: rgba(255,255,255,0.10);
-    }
-    .card > * { position: relative; z-index: 1; padding-left: 10px; }
-
-    .card h2{
-      margin: 0 0 10px;
-      font-family: var(--mono);
-      font-size: 13px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.88);
-      font-weight: 650;
-    }
-    .card p{ margin: 0; color: var(--muted); }
-
-    .card ul{
-      margin: 10px 0 0;
-      padding-left: 28px;
-      color: var(--muted);
-    }
-    .card li{ margin: 7px 0; }
-
-    .wide{ grid-column: span 12; background: var(--glass2); }
-
-    /* "Thought fragment" block */
-    .fragment{
-      margin-top: 14px;
-      padding: 16px 18px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      font-family: var(--mono);
-      color: rgba(255,255,255,0.74);
-      letter-spacing: 0.02em;
-    }
-    .fragment .k{
-      opacity: 0.85;
-    }
-    .fragment .v{
-      color: rgba(255,255,255,0.86);
-    }
-
-    footer{
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    footer a{
-      color: var(--muted);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.18);
-    }
-    footer a:hover{ color: var(--text); }
-
-    /* Mobile */
-    @media (max-width: 760px){
-      nav{ display:none; }
-      .card{ grid-column: span 12; }
-      .hero-inner{ padding: 22px 16px; }
-      .card > * { padding-left: 8px; }
-      .card:before{ left: 12px; }
-    }
-
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
-      .sigil:after{ animation: none; }
+      .sigil:after{animation:none;}
+      .cursorHalo{transition:none;}
     }
   </style>
-</head>
 
+  <!-- easter egg: systems should reveal their structure -->
+</head>
 <body>
   <div class="noise" aria-hidden="true"></div>
+  <div class="cursorHalo" aria-hidden="true"></div>
 
   <header>
     <div class="topbar">
       <a class="brand" href="#top" aria-label="Exira home">
         <div class="sigil" aria-hidden="true"></div>
-        <div class="name">EXIRA</div>
+        <div class="brandName">EXIRA</div>
       </a>
 
       <nav aria-label="Navigazione">
         <a href="#visione">Visione</a>
-        <a href="#ambito">Ambito</a>
-        <a href="#approccio">Approccio</a>
+        <a href="#protocollo">Protocollo</a>
         <a href="#stato">Stato</a>
+        <a href="#contatto">Contatto</a>
+        <span class="chip" id="toggle">essenziale</span>
       </nav>
+
+      <span class="chip" id="toggleMobile" aria-label="Modalità essenziale">essenziale</span>
     </div>
   </header>
 
   <main class="wrap" id="top">
 
     <section class="hero">
-      <div class="stripe" aria-hidden="true"></div>
-      <div class="hero-inner">
+      <div class="heroInner">
         <h1>Exira</h1>
         <p class="lede">
           Exira è un progetto indipendente in fase di sviluppo orientato alla progettazione di sistemi intelligenti
-          e soluzioni tecnologiche applicate a contesti complessi. Non promette scorciatoie: costruisce strumenti
-          che rendono la complessità governabile.
+          e strumenti decisionali per contesti complessi. Non promette scorciatoie: costruisce strutture che rendono
+          la complessità ispezionabile, controllabile, integrabile.
         </p>
 
-        <div class="meta">
+        <div class="metaRow" aria-label="Stato e principi">
           <div class="pill"><span class="dot"></span> Progetto in evoluzione</div>
           <div class="pill"><span class="glyph">/</span> Minimal • Controllabile • Adattabile</div>
           <div class="pill"><span class="glyph">∴</span> Tecnologia come mezzo</div>
+          <div class="pill"><span class="glyph">→</span> <span id="principle">…</span></div>
         </div>
       </div>
     </section>
-
-    <section class="grid" aria-label="Contenuti">
+        <section class="grid" aria-label="Contenuti">
 
       <article class="card" id="visione">
         <h2>Visione</h2>
@@ -364,45 +191,41 @@
         </p>
       </article>
 
-      <article class="card" id="ambito">
-        <h2>Ambito</h2>
-        <p>
-          Il progetto si muove tra ricerca, progettazione e integrazione di sistemi intelligenti applicati:
-        </p>
-        <ul>
-          <li>Sistemi intelligenti orientati a casi d’uso reali</li>
-          <li>Automazione dei processi cognitivi e operativi</li>
-          <li>Supporto decisionale e sintesi di complessità</li>
-          <li>Integrazione tra software, dati e flussi di lavoro</li>
-        </ul>
-        <p style="margin-top:10px;">
-          Le applicazioni sono pensate per contesti professionali e organizzativi, senza limitarsi a un singolo settore.
-        </p>
-      </article>
-
-      <article class="card" id="approccio">
-        <h2>Approccio</h2>
-        <p>
-          Exira adotta un approccio pragmatico e incrementale. Ogni soluzione nasce da un contesto reale,
-          con attenzione a riservatezza dei dati, controllo dei sistemi e adattabilità nel tempo.
-          L’obiettivo non è “magia”, ma chiarezza operativa: un’intelligenza che si lascia ispezionare.
-        </p>
+      <article class="card" id="protocollo">
+        <h2>Protocollo</h2>
+        <p>Exira lavora per sottrazione: riduce rumore, aumenta chiarezza, conserva controllo.</p>
+        <div class="protocol" aria-label="Protocollo operativo">
+          <div class="step">Chiarire</div>
+          <div class="step">Costruire</div>
+          <div class="step">Integrare</div>
+        </div>
+        <p style="margin-top:10px;">Vincoli: controllo, ispezionabilità, riservatezza.</p>
       </article>
 
       <article class="card" id="stato">
         <h2>Stato del progetto</h2>
         <p>
-          Exira è in fase di sviluppo. Le attività in corso riguardano la definizione dell’architettura,
-          delle metodologie e delle prime implementazioni sperimentali. Le informazioni verranno condivise
-          progressivamente, in modo coerente con l’evoluzione dell’iniziativa.
+          Fase architetturale. Esplorazione attiva. Consolidamento concettuale.
+          Le informazioni verranno condivise progressivamente, in modo coerente con l’evoluzione dell’iniziativa.
         </p>
+      </article>
+
+      <article class="card" id="ambito">
+        <h2>Ambito</h2>
+        <p>Il progetto si muove tra ricerca, progettazione e integrazione di sistemi intelligenti applicati:</p>
+        <ul>
+          <li>Sistemi intelligenti orientati a casi d’uso reali</li>
+          <li>Automazione di processi cognitivi e operativi</li>
+          <li>Supporto decisionale e sintesi di complessità</li>
+          <li>Integrazione tra software, dati e flussi di lavoro</li>
+        </ul>
       </article>
 
       <article class="card wide">
         <h2>Impostazione</h2>
         <p>
           Questo sito è intenzionalmente semplice: un’indicazione di esistenza e direzione, non una vetrina.
-          Exira preferisce la precisione alla teatralità. Se un sistema è utile, deve essere comprensibile,
+          Exira preferisce precisione a teatralità. Se un sistema è utile, deve essere comprensibile,
           controllabile e integrabile nel mondo reale.
         </p>
 
@@ -411,15 +234,108 @@
           <span class="k">Metodo:</span> <span class="v">fare meno, ma farlo meglio.</span><br/>
           <span class="k">Esito:</span> <span class="v">complessità gestita, non nascosta.</span>
         </div>
+
+        <p style="margin-top:12px; color: rgba(255,255,255,0.62);">
+          Scorciatoie: <span class="glyph">E</span> essenziale · <span class="glyph">T</span> top
+        </p>
+      </article>
+
+      <article class="card wide" id="contatto">
+        <h2>Contatto riservato</h2>
+        <p>Comunicazioni formali e istituzionali via PEC.</p>
+        <div class="contactBox">
+          <div class="glyph">PEC</div>
+          <a class="pec" href="mailto:exira@pec.it">exira@pec.it</a>
+          <div style="margin-top:8px; font-size: 13px;">Il contatto avviene quando è necessario.</div>
+        </div>
       </article>
 
     </section>
 
     <footer>
-      <div>© Exira — progetto in sviluppo</div>
-      <div class="glyph">Presenza minima. Direzione chiara.</div>
+      <div class="footLeft">
+        <div>© Exira — progetto in sviluppo</div>
+        <div class="glyph">Presenza minima. Direzione chiara.</div>
+      </div>
+
+      <div class="footRight">
+        <div class="badgeWrap" aria-label="Contatore visite">
+          <img alt="Visite"
+            src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fexira11.github.io%2Fexira&count_bg=%23070A10&title_bg=%23111111&icon=&icon_color=%23FFFFFF&title=visite&edge_flat=false" />
+        </div>
+      </div>
     </footer>
 
   </main>
+    <script>
+    // Ambient cursor halo (desktop only)
+    (function(){
+      const root = document.documentElement;
+      let last = 0;
+      function onMove(e){
+        const now = performance.now();
+        if (now - last < 16) return;
+        last = now;
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        root.style.setProperty("--mx", x + "%");
+        root.style.setProperty("--my", y + "%");
+      }
+      window.addEventListener("mousemove", onMove, { passive: true });
+    })();
+
+    const principles = [
+      "La complessità non va eliminata: va capita.",
+      "Un buon sistema si lascia interrogare.",
+      "Automatizzare non è delegare il pensiero.",
+      "Il controllo è una forma di libertà.",
+      "La tecnologia è utile solo se resta comprensibile.",
+      "L’output non basta: serve tracciabilità mentale.",
+      "Semplificare è un atto di precisione.",
+      "La chiarezza è una feature, non un optional."
+    ];
+
+    function pickPrinciple(){
+      const el = document.getElementById("principle");
+      if (!el) return;
+      const key = "exira_principle_day";
+      const day = new Date().toISOString().slice(0,10);
+      const stored = JSON.parse(localStorage.getItem(key) || "null");
+      let idx;
+      if (stored && stored.day === day && typeof stored.idx === "number") idx = stored.idx;
+      else {
+        idx = Math.floor(Math.random() * principles.length);
+        localStorage.setItem(key, JSON.stringify({ day, idx }));
+      }
+      el.textContent = principles[idx];
+    }
+
+    function setEssential(on){
+      document.body.classList.toggle("essential", on);
+      localStorage.setItem("exira_essential", on ? "1" : "0");
+    }
+    function initEssential(){ setEssential(localStorage.getItem("exira_essential") === "1"); }
+    function toggleEssential(){ setEssential(!document.body.classList.contains("essential")); }
+
+    function wire(id){
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      btn.addEventListener("click", toggleEssential);
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const k = (e.key || "").toLowerCase();
+      if (k === "e") toggleEssential();
+      if (k === "t") window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    initEssential();
+    wire("toggle");
+    wire("toggleMobile");
+    pickPrinciple();
+  </script>
+
+  <!-- If you're reading this: you're already inside the interface. -->
 </body>
 </html>
